@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.almasb.androidfx.AndroidFXApp">
+<VBox prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.almasb.androidfx.UIController">
    <children>
       <GridPane>
         <columnConstraints>
@@ -19,10 +20,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Output Directory:" />
+            <Label text="Output Directory:">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin></Label>
             <Label text="Package:" GridPane.rowIndex="1" />
             <Label text="Class Name:" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" onAction="#browseDirectory" text="Browse..." GridPane.columnIndex="2" />
+            <Button mnemonicParsing="false" onAction="#browseOutputDirectory" text="Browse..." GridPane.columnIndex="2" />
             <Label fx:id="labelOutputDir" GridPane.columnIndex="1" />
             <Button mnemonicParsing="false" onAction="#browseAppFile" text="Browse..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <Label fx:id="labelPackage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -30,10 +34,15 @@
          </children>
       </GridPane>
       <Separator prefWidth="200.0" />
+      <TextArea fx:id="log" prefHeight="466.0" prefWidth="600.0" />
+      <Separator prefWidth="200.0" />
       <HBox alignment="BOTTOM_RIGHT" prefHeight="30.0" prefWidth="600.0" spacing="15.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#finish" prefWidth="100.0" text="Finish" />
-            <Button mnemonicParsing="false" onAction="#exit" prefWidth="100.0" text="Exit" />
+            <Button fx:id="btnFinish" mnemonicParsing="false" onAction="#finish" prefWidth="100.0" text="Finish" />
+            <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" prefWidth="100.0" text="Exit">
+               <HBox.margin>
+                  <Insets right="20.0" />
+               </HBox.margin></Button>
          </children>
       </HBox>
    </children>
