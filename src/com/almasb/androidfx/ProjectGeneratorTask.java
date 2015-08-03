@@ -1,3 +1,17 @@
+/*
+ *   AndroidFX
+ *   Copyright (C) {2015}  {Almas Baimagambetov}
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ */
 package com.almasb.androidfx;
 
 import java.io.BufferedReader;
@@ -7,25 +21,36 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 
+/**
+ * Generates gradle javafxports project.
+ *
+ * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
+ *
+ */
 public final class ProjectGeneratorTask extends Task<Void> {
 
     private Path outputDir;
     private Path appFile;
     private String packageName;
+    private String androidSDK;
 
     private TextArea log;
 
-    public ProjectGeneratorTask(Path outputDir, Path appFile, String packageName, TextArea log) {
+    public ProjectGeneratorTask(Path outputDir, Path appFile, String packageName, String androidSDK, TextArea log) {
         this.outputDir = outputDir;
         this.appFile = appFile;
         this.packageName = packageName;
+        this.androidSDK = androidSDK;
         this.log = log;
     }
 
@@ -92,6 +117,10 @@ public final class ProjectGeneratorTask extends Task<Void> {
                     line = line.replace("$PACKAGE", packageName);
                 }
 
+                if (line.contains("$ANDROID_SDK")) {
+                    line = line.replace("$ANDROID_SDK", androidSDK).replace("\\", "/");
+                }
+
                 result.add(line);
             }
         }
@@ -135,6 +164,11 @@ public final class ProjectGeneratorTask extends Task<Void> {
         }
         else {
             logMessage("OS: NON-WINDOWS. Using gradlew");
+            Set<PosixFilePermission> permissions =
+                    EnumSet.of(PosixFilePermission.OWNER_EXECUTE,
+                            PosixFilePermission.GROUP_EXECUTE,
+                            PosixFilePermission.OTHERS_EXECUTE);
+            Files.setPosixFilePermissions(outputDir.resolve("gradlew"), permissions);
             runProcess(outputDir.toAbsolutePath() + "/gradlew android");
         }
 

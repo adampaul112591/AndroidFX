@@ -19,5 +19,6 @@ repositories {
 jfxmobile {
     android {
         applicationPackage = '$PACKAGE'
+        androidSdk = '$ANDROID_SDK'
     }
 }

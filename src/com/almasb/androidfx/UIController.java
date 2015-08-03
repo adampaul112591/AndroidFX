@@ -1,3 +1,17 @@
+/*
+ *   AndroidFX
+ *   Copyright (C) {2015}  {Almas Baimagambetov}
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ */
 package com.almasb.androidfx;
 
 import java.io.BufferedReader;
@@ -16,6 +30,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
+/**
+ * Main UI controller
+ *
+ * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
+ *
+ */
 public class UIController {
 
     private Stage stage;
@@ -26,6 +46,8 @@ public class UIController {
     private Label labelPackage;
     @FXML
     private Label labelClassName;
+    @FXML
+    private Label labelAndroidSDK;
 
     @FXML
     private Button btnFinish;
@@ -46,7 +68,8 @@ public class UIController {
         btnFinish.disableProperty().bind(
                 labelOutputDir.textProperty().isEmpty()
                 .or(labelPackage.textProperty().isEmpty())
-                .or(labelClassName.textProperty().isEmpty()));
+                .or(labelClassName.textProperty().isEmpty())
+                .or(labelAndroidSDK.textProperty().isEmpty()));
     }
 
     @FXML
@@ -87,12 +110,22 @@ public class UIController {
     }
 
     @FXML
+    private void browseAndroidSDK() {
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select Android SDK directory");
+        File dir = chooser.showDialog(stage);
+        if (dir != null) {
+            labelAndroidSDK.setText(dir.getAbsolutePath());
+        }
+    }
+
+    @FXML
     private void finish() {
         btnFinish.disableProperty().unbind();
         btnFinish.setDisable(true);
         btnExit.setDisable(true);
 
-        ProjectGeneratorTask task = new ProjectGeneratorTask(outputDir, classFile, labelPackage.getText(), log);
+        ProjectGeneratorTask task = new ProjectGeneratorTask(outputDir, classFile, labelPackage.getText(), labelAndroidSDK.getText(), log);
 
         Thread thread = new Thread(task);
         thread.setDaemon(true);
